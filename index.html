@@ -136,11 +136,17 @@
             font-size: 1.2rem;
             color: #7a4a4a;
             box-shadow: 0 5px 15px rgba(255, 107, 139, 0.1);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .verse-text {
+            margin-bottom: 15px;
         }
         
         .verse-reference {
-            display: block;
-            margin-top: 15px;
             color: #ff6b8b;
             font-weight: bold;
             font-style: normal;
@@ -296,6 +302,7 @@
             .bible-verse {
                 font-size: 1.1rem;
                 padding: 20px;
+                min-height: 180px;
             }
         }
     </style>
@@ -314,8 +321,8 @@
         <div class="subtitle">Desde que te conheci</div>
         
         <div class="bible-verse">
-            "O amor é paciente, o amor é bondoso. Não inveja, não se vangloria, não se orgulha. Não maltrata, não procura seus interesses, não se ira facilmente, não guarda rancor. O amor não se alegra com a injustiça, mas se alegra com a verdade. Tudo sofre, tudo crê, tudo espera, tudo suporta. O amor nunca perece;"
-            <span class="verse-reference">1 Coríntios 13:4-8</span>
+            <div class="verse-text" id="verseText">Carregando versículo do dia...</div>
+            <div class="verse-reference" id="verseReference"></div>
         </div>
         
         <div class="days-counter">
@@ -338,6 +345,14 @@
     </div>
 
     <script>
+        const localVerses = [
+            {text: "O amor é paciente, o amor é bondoso. Não inveja, não se vangloria, não se orgulha.", reference: "1 Coríntios 13:4"},
+            {text: "Acima de tudo, porém, revistam-se do amor, que é o elo perfeito.", reference: "Colossenses 3:14"},
+            {text: "Nós amamos porque ele nos amou primeiro.", reference: "1 João 4:19"},
+            {text: "Quem não ama não conhece a Deus, porque Deus é amor.", reference: "1 João 4:8"},
+            {text: "Não há maior amor do que dar a vida pelos seus amigos.", reference: "João 15:13"}
+        ];
+
         function createHearts() {
             const heartRain = document.getElementById('heartRain');
             for (let i = 0; i < 20; i++) {
@@ -365,12 +380,129 @@
             
             document.getElementById('daysCount').textContent = diffDays;
             
-            console.log('Data encontro:', meetDate.toLocaleDateString('pt-BR'));
-            console.log('Data hoje:', today.toLocaleDateString('pt-BR'));
-            console.log('Diferença em dias:', diffDays);
-            console.log('Hora atual:', new Date().toLocaleTimeString('pt-BR'));
-            
             return diffDays;
+        }
+        
+        function getCurrentDateKey() {
+            const today = new Date();
+            return `echiley_verse_${today.getFullYear()}_${today.getMonth()}_${today.getDate()}`;
+        }
+        
+        function saveTodaysVerse(verse, reference) {
+            const dateKey = getCurrentDateKey();
+            localStorage.setItem(dateKey, JSON.stringify({
+                verse: verse,
+                reference: reference,
+                timestamp: new Date().getTime()
+            }));
+            console.log('Versículo salvo para hoje:', dateKey);
+        }
+        
+        function getTodaysVerse() {
+            const dateKey = getCurrentDateKey();
+            const saved = localStorage.getItem(dateKey);
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    const savedDate = new Date(data.timestamp);
+                    const today = new Date();
+                    
+                    if (savedDate.getDate() === today.getDate() &&
+                        savedDate.getMonth() === today.getMonth() &&
+                        savedDate.getFullYear() === today.getFullYear()) {
+                        console.log('Versículo de hoje encontrado no cache');
+                        return data;
+                    }
+                } catch (e) {
+                    console.log('Erro ao ler versículo salvo:', e);
+                }
+            }
+            return null;
+        }
+        
+        async function fetchLoveVerse() {
+            const loveReferences = [
+                '1 corinthians 13:4-8',
+                'john 15:13',
+                '1 john 4:7-8',
+                '1 john 4:18-19',
+                'romans 13:10',
+                'colossians 3:14',
+                '1 peter 4:8',
+                'song of solomon 8:6-7',
+                'proverbs 10:12',
+                'ephesians 5:25',
+                '1 corinthians 16:14',
+                '1 john 3:18',
+                '1 john 4:12',
+                '1 john 4:16',
+                '2 john 1:6'
+            ];
+            
+            const randomRef = loveReferences[Math.floor(Math.random() * loveReferences.length)];
+            
+            try {
+                const response = await fetch(`https://bible-api.com/${randomRef}?translation=almeida`);
+                if (!response.ok) throw new Error('API falhou');
+                
+                const data = await response.json();
+                
+                let verseText = data.text.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim();
+                if (verseText.length > 250) {
+                    verseText = verseText.substring(0, 247) + '..."';
+                }
+                
+                return {
+                    verse: `"${verseText}"`,
+                    reference: data.reference
+                };
+                
+            } catch (error) {
+                console.log('API falhou:', error);
+                return null;
+            }
+        }
+        
+        function updateVerseDisplay(verse, reference) {
+            document.getElementById('verseText').textContent = verse;
+            document.getElementById('verseReference').textContent = reference;
+        }
+        
+        function useLocalVerse() {
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 1000 / 60 / 60 / 24);
+            const verseIndex = dayOfYear % localVerses.length;
+            const verse = localVerses[verseIndex];
+            return {
+                verse: `"${verse.text}"`,
+                reference: verse.reference
+            };
+        }
+        
+        async function loadDailyVerse() {
+            console.log('Carregando versículo do dia...');
+            
+            const todaysVerse = getTodaysVerse();
+            
+            if (todaysVerse) {
+                updateVerseDisplay(todaysVerse.verse, todaysVerse.reference);
+                return;
+            }
+            
+            document.getElementById('verseText').textContent = "Buscando novo versículo...";
+            
+            const apiVerse = await fetchLoveVerse();
+            
+            if (apiVerse) {
+                updateVerseDisplay(apiVerse.verse, apiVerse.reference);
+                saveTodaysVerse(apiVerse.verse, apiVerse.reference);
+                console.log('Novo versículo da API:', apiVerse.reference);
+            } else {
+                const localVerse = useLocalVerse();
+                updateVerseDisplay(localVerse.verse, localVerse.reference);
+                saveTodaysVerse(localVerse.verse, localVerse.reference);
+                console.log('Usando versículo local:', localVerse.reference);
+            }
         }
         
         function setupMidnightUpdate() {
@@ -382,47 +514,34 @@
             
             const msUntilMidnight = midnight.getTime() - now.getTime();
             
-            console.log('Próxima atualização à meia-noite em:', Math.floor(msUntilMidnight / 1000 / 60), 'minutos');
+            console.log('Próxima atualização em:', Math.floor(msUntilMidnight/1000/60), 'minutos');
             
-            setTimeout(function() {
-                console.log('Meia-noite! Atualizando contagem...');
+            setTimeout(() => {
+                console.log('🎉 Meia-noite! Limpando cache e atualizando...');
+                loadDailyVerse();
                 calculateDays();
                 setupMidnightUpdate();
             }, msUntilMidnight);
         }
         
-        function checkDailyUpdate() {
-            const todayStr = new Date().toDateString();
-            const lastUpdate = localStorage.getItem('echiley_lastUpdate');
-            
-            if (lastUpdate !== todayStr) {
-                localStorage.setItem('echiley_lastUpdate', todayStr);
-                calculateDays();
-                console.log('Novo dia detectado via localStorage');
-            }
-        }
-        
-        window.onload = function() {
-            console.log('Site Echiley inicializando...');
+        function initializeSite() {
+            console.log('🚀 Iniciando site Echiley...');
             
             createHearts();
             calculateDays();
+            loadDailyVerse();
             
             setupMidnightUpdate();
             
-            checkDailyUpdate();
-            
-            setInterval(function() {
-                console.log('Verificação horária...');
+            setInterval(() => {
                 calculateDays();
-                checkDailyUpdate();
             }, 60 * 60 * 1000);
-            
-            console.log('Site Echiley inicializado com sucesso!');
-        };
+        }
+        
+        window.onload = initializeSite;
         
         if (document.readyState === 'complete') {
-            window.onload();
+            initializeSite();
         }
     </script>
 </body>
