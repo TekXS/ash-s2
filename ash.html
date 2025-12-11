@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Echiley ❤️</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #5d3a3a;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(255, 107, 129, 0.15);
+            padding: 50px 40px;
+            text-align: center;
+            max-width: 600px;
+            width: 100%;
+            border: 3px solid #ffafbd;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .container::before {
+            content: '';
+            position: absolute;
+            top: -50px;
+            right: -50px;
+            width: 150px;
+            height: 150px;
+            background: #ffafbd;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+        
+        .container::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -30px;
+            width: 100px;
+            height: 100px;
+            background: #ffc3a0;
+            border-radius: 50%;
+            opacity: 0.1;
+        }
+        
+        .hearts-decoration {
+            position: absolute;
+            font-size: 24px;
+            color: #ff6b8b;
+            opacity: 0.3;
+            animation: float 3s infinite ease-in-out;
+        }
+        
+        .hearts-decoration:nth-child(1) {
+            top: 20px;
+            left: 30px;
+            animation-delay: 0s;
+        }
+        
+        .hearts-decoration:nth-child(2) {
+            top: 40px;
+            right: 40px;
+            animation-delay: 0.5s;
+        }
+        
+        .hearts-decoration:nth-child(3) {
+            bottom: 30px;
+            left: 40px;
+            animation-delay: 1s;
+        }
+        
+        .hearts-decoration:nth-child(4) {
+            bottom: 50px;
+            right: 30px;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+        
+        .main-heart {
+            font-size: 5rem;
+            color: #ff6b8b;
+            margin-bottom: 10px;
+            display: block;
+            animation: heartbeat 1.2s infinite;
+        }
+        
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+        
+        .name-title {
+            color: #ff6b8b;
+            font-size: 3.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            color: #7a4a4a;
+            margin-bottom: 40px;
+            font-size: 1.8rem;
+            font-style: italic;
+        }
+        
+        .bible-verse {
+            background: linear-gradient(135deg, #fff0f3 0%, #ffe8eb 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            border-left: 5px solid #ff6b8b;
+            font-style: italic;
+            line-height: 1.6;
+            font-size: 1.2rem;
+            color: #7a4a4a;
+            box-shadow: 0 5px 15px rgba(255, 107, 139, 0.1);
+        }
+        
+        .verse-reference {
+            display: block;
+            margin-top: 15px;
+            color: #ff6b8b;
+            font-weight: bold;
+            font-style: normal;
+        }
+        
+        .days-counter {
+            background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+            color: white;
+            padding: 50px 30px;
+            border-radius: 20px;
+            margin: 40px 0;
+            box-shadow: 0 10px 30px rgba(255, 175, 189, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .days-counter::before {
+            content: '💖';
+            position: absolute;
+            font-size: 120px;
+            opacity: 0.15;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        
+        .days-number {
+            font-size: 5.5rem;
+            font-weight: 800;
+            margin: 15px 0;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+        }
+        
+        .art-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-top: 25px;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .art-heart {
+            font-size: 2.5rem;
+            animation: artFloat 4s infinite ease-in-out;
+            filter: drop-shadow(0 3px 5px rgba(0, 0, 0, 0.2));
+        }
+        
+        .art-heart:nth-child(1) {
+            color: #ff6b6b;
+            animation-delay: 0s;
+        }
+        
+        .art-heart:nth-child(2) {
+            color: #ff8e8e;
+            animation-delay: 0.5s;
+        }
+        
+        .art-heart:nth-child(3) {
+            color: #ffafbd;
+            animation-delay: 1s;
+        }
+        
+        .art-heart:nth-child(4) {
+            color: #ffc3a0;
+            animation-delay: 1.5s;
+        }
+        
+        .art-heart:nth-child(5) {
+            color: #ff6b6b;
+            animation-delay: 2s;
+        }
+        
+        @keyframes artFloat {
+            0%, 100% { 
+                transform: translateY(0) rotate(0deg); 
+            }
+            25% { 
+                transform: translateY(-8px) rotate(-10deg); 
+            }
+            50% { 
+                transform: translateY(0) rotate(0deg); 
+            }
+            75% { 
+                transform: translateY(-8px) rotate(10deg); 
+            }
+        }
+        
+        .art-text {
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            margin-top: 25px;
+            position: relative;
+            z-index: 2;
+            font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .god-message {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            margin-top: 30px;
+            padding: 25px;
+            background: #f9f3f3;
+            border-radius: 15px;
+            border: 2px dashed #ffafbd;
+            color: #7a4a4a;
+        }
+        
+        .heart-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .falling-heart {
+            position: absolute;
+            color: #ff6b8b;
+            font-size: 24px;
+            opacity: 0;
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .name-title {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.5rem;
+            }
+            
+            .main-heart {
+                font-size: 4rem;
+            }
+            
+            .days-number {
+                font-size: 4rem;
+            }
+            
+            .art-heart {
+                font-size: 2rem;
+            }
+            
+            .art-text {
+                font-size: 1.3rem;
+                letter-spacing: 2px;
+            }
+            
+            .bible-verse {
+                font-size: 1.1rem;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Corações caindo -->
+    <div class="heart-rain" id="heartRain"></div>
+    
+    <!-- Corações decorativos -->
+    <div class="hearts-decoration">❤️</div>
+    <div class="hearts-decoration">💕</div>
+    <div class="hearts-decoration">💖</div>
+    <div class="hearts-decoration">💗</div>
+    
+    <div class="container">
+        <div class="main-heart">❤️</div>
+        <div class="name-title">Echiley</div>
+        <div class="subtitle">Desde que te conheci</div>
+        
+        <div class="bible-verse">
+            "O amor é paciente, o amor é bondoso. Não inveja, não se vangloria, não se orgulha. Não maltrata, não procura seus interesses, não se ira facilmente, não guarda rancor. O amor não se alegra com a injustiça, mas se alegra com a verdade. Tudo sofre, tudo crê, tudo espera, tudo suporta. O amor nunca perece;"
+            <span class="verse-reference">1 Coríntios 13:4-8</span>
+        </div>
+        
+        <div class="days-counter">
+            <div class="days-number" id="daysCount">0</div>
+            
+            <div class="art-container">
+                <div class="art-heart">💖</div>
+                <div class="art-heart">💕</div>
+                <div class="art-heart">💗</div>
+                <div class="art-heart">💓</div>
+                <div class="art-heart">💞</div>
+            </div>
+            
+            <div class="art-text">DIAS QUE MINHA VIDA MUDOU</div>
+        </div>
+        
+        <div class="god-message">
+            Cada dia contado é uma prova do amor que Deus preparou para nós
+        </div>
+    </div>
+
+    <script>
+        // Criar corações caindo
+        function createHearts() {
+            const heartRain = document.getElementById('heartRain');
+            for (let i = 0; i < 20; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'falling-heart';
+                heart.innerHTML = '❤️';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 5) + 's';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                heart.style.opacity = Math.random() * 0.3 + 0.1;
+                heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                heartRain.appendChild(heart);
+            }
+        }
+        
+        // Calcular dias desde 27/10/2025
+        function calculateDays() {
+            const meetingDate = new Date('2025-10-27');
+            const today = new Date();
+            
+            // Se a data ainda não chegou, mostra contagem regressiva
+            if (meetingDate > today) {
+                const timeDiff = meetingDate.getTime() - today.getTime();
+                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                document.getElementById('daysCount').textContent = `-${daysDiff}`;
+            } else {
+                // Se já passou, conta os dias normais
+                const timeDiff = today.getTime() - meetingDate.getTime();
+                const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+                document.getElementById('daysCount').textContent = daysDiff.toLocaleString('pt-BR');
+            }
+        }
+        
+        // Inicializar
+        window.onload = function() {
+            createHearts();
+            calculateDays();
+            
+            // Atualizar a cada hora
+            setInterval(calculateDays, 3600000);
+        };
+    </script>
+</body>
+</html>
