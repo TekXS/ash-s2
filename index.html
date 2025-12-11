@@ -218,18 +218,10 @@
         }
         
         @keyframes artFloat {
-            0%, 100% { 
-                transform: translateY(0) rotate(0deg); 
-            }
-            25% { 
-                transform: translateY(-8px) rotate(-10deg); 
-            }
-            50% { 
-                transform: translateY(0) rotate(0deg); 
-            }
-            75% { 
-                transform: translateY(-8px) rotate(10deg); 
-            }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-10deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(-8px) rotate(10deg); }
         }
         
         .art-text {
@@ -282,32 +274,25 @@
             .container {
                 padding: 30px 20px;
             }
-            
             .name-title {
                 font-size: 2.8rem;
             }
-            
             .subtitle {
                 font-size: 1.5rem;
             }
-            
             .main-heart {
                 font-size: 4rem;
             }
-            
             .days-number {
                 font-size: 4rem;
             }
-            
             .art-heart {
                 font-size: 2rem;
             }
-            
             .art-text {
                 font-size: 1.3rem;
                 letter-spacing: 2px;
             }
-            
             .bible-verse {
                 font-size: 1.1rem;
                 padding: 20px;
@@ -316,10 +301,8 @@
     </style>
 </head>
 <body>
-    <!-- Corações caindo -->
     <div class="heart-rain" id="heartRain"></div>
     
-    <!-- Corações decorativos -->
     <div class="hearts-decoration">❤️</div>
     <div class="hearts-decoration">💕</div>
     <div class="hearts-decoration">💖</div>
@@ -355,7 +338,6 @@
     </div>
 
     <script>
-        // Criar corações caindo
         function createHearts() {
             const heartRain = document.getElementById('heartRain');
             for (let i = 0; i < 20; i++) {
@@ -371,32 +353,77 @@
             }
         }
         
-        // Calcular dias desde 27/10/2025
         function calculateDays() {
-            const meetingDate = new Date('2025-10-27');
+            const meetDate = new Date(2025, 9, 27);
             const today = new Date();
             
-            // Se a data ainda não chegou, mostra contagem regressiva
-            if (meetingDate > today) {
-                const timeDiff = meetingDate.getTime() - today.getTime();
-                const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
-                document.getElementById('daysCount').textContent = `-${daysDiff}`;
-            } else {
-                // Se já passou, conta os dias normais
-                const timeDiff = today.getTime() - meetingDate.getTime();
-                const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
-                document.getElementById('daysCount').textContent = daysDiff.toLocaleString('pt-BR');
+            meetDate.setHours(0, 0, 0, 0);
+            today.setHours(0, 0, 0, 0);
+            
+            const diffTime = today.getTime() - meetDate.getTime();
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('daysCount').textContent = diffDays;
+            
+            console.log('Data encontro:', meetDate.toLocaleDateString('pt-BR'));
+            console.log('Data hoje:', today.toLocaleDateString('pt-BR'));
+            console.log('Diferença em dias:', diffDays);
+            console.log('Hora atual:', new Date().toLocaleTimeString('pt-BR'));
+            
+            return diffDays;
+        }
+        
+        function setupMidnightUpdate() {
+            const now = new Date();
+            const midnight = new Date();
+            
+            midnight.setDate(midnight.getDate() + 1);
+            midnight.setHours(0, 0, 0, 0);
+            
+            const msUntilMidnight = midnight.getTime() - now.getTime();
+            
+            console.log('Próxima atualização à meia-noite em:', Math.floor(msUntilMidnight / 1000 / 60), 'minutos');
+            
+            setTimeout(function() {
+                console.log('Meia-noite! Atualizando contagem...');
+                calculateDays();
+                setupMidnightUpdate();
+            }, msUntilMidnight);
+        }
+        
+        function checkDailyUpdate() {
+            const todayStr = new Date().toDateString();
+            const lastUpdate = localStorage.getItem('echiley_lastUpdate');
+            
+            if (lastUpdate !== todayStr) {
+                localStorage.setItem('echiley_lastUpdate', todayStr);
+                calculateDays();
+                console.log('Novo dia detectado via localStorage');
             }
         }
         
-        // Inicializar
         window.onload = function() {
+            console.log('Site Echiley inicializando...');
+            
             createHearts();
             calculateDays();
             
-            // Atualizar a cada hora
-            setInterval(calculateDays, 3600000);
+            setupMidnightUpdate();
+            
+            checkDailyUpdate();
+            
+            setInterval(function() {
+                console.log('Verificação horária...');
+                calculateDays();
+                checkDailyUpdate();
+            }, 60 * 60 * 1000);
+            
+            console.log('Site Echiley inicializado com sucesso!');
         };
+        
+        if (document.readyState === 'complete') {
+            window.onload();
+        }
     </script>
 </body>
 </html>
